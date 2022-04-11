@@ -8,7 +8,7 @@
 <p align="center"><strong><code>this app uses Capacitor3</code></strong></p>
 <br>
 <p align="center">
-  <img src="https://img.shields.io/maintenance/yes/2021?style=flat-square" />
+  <img src="https://img.shields.io/maintenance/yes/2022?style=flat-square" />
   <a href="https://github.com/jepiqueau/capacitor-solid-sqlite"><img src="https://img.shields.io/github/license/jepiqueau/capacitor-solid-sqlite?style=flat-square" /></a>
   <a href="https://github.com/jepiqueau/capacitor-solid-sqlite"><img src="https://img.shields.io/github/package-json/v/jepiqueau/capacitor-solid-sqlite/master?style=flat-square" /></a>
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
