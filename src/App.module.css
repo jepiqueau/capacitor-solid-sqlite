@@ -1,0 +1,11 @@
+.App {
+    background-color: #3c3d3d54;
+}
+.iosHeader {
+    width: 100vw;
+    height: 60px; 
+}
+.menu {
+    width: 100vw;
+    height: 5vh; 
+}
