@@ -26,8 +26,8 @@ const App: Component = () => {
               </Link>
             </li>
             <li class="py-2 px-4">
-              <Link href="/noencryption" class="no-underline hover:underline">
-                NoEncryption
+              <Link href="/sqlite" class="no-underline hover:underline">
+                Sqlite
               </Link>
             </li>
             <li class="py-2 px-4">
@@ -35,12 +35,6 @@ const App: Component = () => {
                 About
               </Link>
             </li>
-            <li class="py-2 px-4">
-              <Link href="/error" class="no-underline hover:underline">
-                Error
-              </Link>
-            </li>
-
             <li class="text-sm flex items-center space-x-1 ml-auto">
               <span>URL:</span>
               <input

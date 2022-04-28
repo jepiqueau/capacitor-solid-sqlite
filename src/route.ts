@@ -10,8 +10,16 @@ export const routes: RouteDefinition[] = [
     component: Home,
   },
   {
+    path: '/sqlite',
+    component: lazy(() => import('./pages/sqlite-tests/SqlitePage'))
+  },
+  {
     path: '/noencryption',
     component: lazy(() => import('./pages/no-encryption/NoEncryption'))
+  },
+  {
+    path: '/importexport',
+    component: lazy(() => import('./pages/import-export/ImportExportJson'))
   },
   {
     path: '/about',
