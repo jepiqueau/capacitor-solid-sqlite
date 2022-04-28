@@ -81,9 +81,15 @@ npx cap open ios
 
 ### Test SQLite access
 
-The ```@capacitor-community/sqlite``` test are accessible through the home page menu.
+The ```@capacitor-community/sqlite``` tests are accessible through the home page menu.
 
- - NoEncryption
+ - Sqlite
+
+and the press on:
+
+ - No Encryption
+
+ - Import/Export JSON
 
 ### Documentation
 
