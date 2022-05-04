@@ -127,3 +127,33 @@ export const partialImport2: any = {
     }
   ]
 };
+
+export const dataToImport265: any = {
+  database : "db-issue265",
+  version : 1,
+  encrypted : false,
+  mode : "full",
+  tables :[
+      {
+        name: "sites",
+        schema: [
+          { column: "id", value: "INTEGER PRIMARY KEY NOT NULL" },
+          { column: "siteId", value: "TEXT UNIQUE NOT NULL" },
+          { column: "code", value: "TEXT NOT NULL" },
+          { column: "officeCode", value: "TEXT NOT NULL" },
+          { column: "name", value: "TEXT NOT NULL" },
+          { column: "address", value: "TEXT" },
+          { column: "city", value: "TEXT" },
+          { column: "province", value: "TEXT" },
+          { column: "country", value: "TEXT" },
+          { column: "zip", value: "TEXT" },
+          { column: "email", value: "TEXT" },
+          { column: "telephone", value: "TEXT" },
+          { column: "lat", value: "TEXT" },
+          { column: "lng", value: "TEXT" },
+          { column:"sql_deleted", value:"BOOLEAN DEFAULT 0 CHECK (sql_deleted IN (0, 1))"},
+          { column:"last_modified", value:"INTEGER DEFAULT (strftime('%s', 'now'))"}
+        ],
+      }
+  ]
+}

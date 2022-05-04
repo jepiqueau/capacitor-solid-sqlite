@@ -4,9 +4,10 @@ import { platform, sqlite } from '../../App';
 import { SQLiteDBConnection, capSQLiteSet } from '@capacitor-community/sqlite';
 
 import { openConnection } from '../../utils/connection-utils';
-import { dataToImport, partialImport1, partialImport2 } from './json-objects-utils';
+import { dataToImport, partialImport1, partialImport2, dataToImport265 } from './json-objects-utils';
 import styles from './ImportExportJson.module.css';
 import { delay } from '../../utils/delay-utils';
+import { sitesData } from './sites-data'
 
 const ImportExportJson: Component = () => {
     const [log, setLog] =  createSignal<string[]>([]);
@@ -353,7 +354,99 @@ const ImportExportJson: Component = () => {
             return Promise.reject();
         }
     }
+    const testIssue265 = async (): Promise<void> => {
+        try {
+            // test Json object validity
+            let res: any = await sqlite.isJsonValid(JSON.stringify(dataToImport265));
+            if(!res.result) { 
+                const msg = `Error: Json Object dataToImport265 not valid"\n`;
+                setErrMsg((errMsg) => errMsg.concat(msg));
+                return Promise.reject();
+            }
+            setLog((log) => log.concat(`> isJsonValid dataToImport265 successful\n`));
 
+            // test import from Json Object
+            res = await sqlite.importFromJson(JSON.stringify(dataToImport265)); 
+            if(res.changes.changes === -1 ) {
+                const msg = `Error: ImportFromJson dataToImport265 changes < 0"\n`;
+                setErrMsg((errMsg) => errMsg.concat(msg));
+                return Promise.reject();
+            }
+            setLog((log) => log.concat(`> importFromJson dataToImport265 successful\n`));
+
+
+            db = await openConnection('db-issue265', false,
+                                      'no-encryption', 1, false);
+            setLog((log) => log.concat("> Open connection 'db-issue265' successful\n"));
+            const twoSitesSet:Array<capSQLiteSet>  = [
+                {   statement:`INSERT INTO sites (siteId,code,officeCode,name,address,city,province,country,zip,email,telephone,lat,lng) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+                    values: [
+                        ["01FA1B4AB79B6D43C1257FD90056219C","ANT012","ANT012","PORTA DI ROMA","Via Alberto Lionello, 201, Località Bufalotta","ROMA","RM","","","prolocofossaltina@gmail.com","0690233474","41,9716623","12,5401904"],
+                        ["01FA1B4AB79B6D43C1257FD90056220C","ANT013","ANT013","TEST1","Via Test1 , 180","Test1City1","BK","","","protest1@gmail.com","0690233475","40,9716623","11,5401904"]
+                    ]
+                },
+            ]
+            const query = `DELETE FROM sites;`
+            res = await db.execute(query);
+            res = await db.executeSet(twoSitesSet); 
+            if(res.changes.changes != 2 || res.changes.lastId != 2) {
+                const msg = `Error: twoSitesSet changes != 2 || lastId != 2"\n`;
+                setErrMsg((errMsg) => errMsg.concat(msg));
+                return Promise.reject();
+
+            }
+            const statement = `
+            INSERT INTO sites (siteId,code,officeCode,name,address,city,province,country,zip,email,telephone,lat,lng) 
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)
+            ON CONFLICT(siteId) DO UPDATE 
+            SET code=excluded.code,officeCode=excluded.officeCode,name=excluded.name,address=excluded.address,city=excluded.city,province=excluded.province,country=excluded.country,zip=excluded.zip,email=excluded.email,telephone=excluded.telephone,lat=excluded.lat,lng=excluded.lng;
+            `
+            const fullSitesSet: capSQLiteSet[] = [];
+            sitesData.forEach(site => {
+                const values = [
+                    site.siteId
+                    ,site.code
+                    ,site.officeCode
+                    ,site.name
+                    ,site.address
+                    ,site.city
+                    ,site.province
+                    ,site.country
+                    ,site.zip
+                    ,site.email
+                    ,site.telephone
+                    ,site.lat
+                    ,site.lng
+                  ]
+                  fullSitesSet.push({
+                    statement,
+                    values,
+                  })                  
+            });
+            res = await db.executeSet(fullSitesSet); 
+            if(res.changes.changes != 7 || res.changes.lastId != 7) {
+                const msg = `Error: fullSitesSet changes != 7 || lastId != 7"\n`;
+                setErrMsg((errMsg) => errMsg.concat(msg));
+                return Promise.reject();
+
+            }
+            let retQuery = await db.query("SELECT total_changes();", []);
+            console.log(`>>> retQuery total_changes: ${JSON.stringify(retQuery)}`)
+            retQuery = await db.query("SELECT last_insert_rowid();", []);
+            console.log(`>>> retQuery last_insert_rowid(): ${JSON.stringify(retQuery)}`)
+
+            // Close Connection db-from-json
+            res = (await sqlite.isConnection('db-issue265')).result;
+            if(res) {
+                await sqlite.closeConnection('db-issue265'); 
+            } 
+        } catch (err:any) {
+            let msg: string = err.message ? err.message : err;
+            setErrMsg((errMsg) => errMsg.concat(`Error: ${msg}`));
+            console.log(`${errMsg()}`)
+            return Promise.reject();
+        }
+    }
     onMount(async () => {
         try {
             await startTest();
@@ -395,12 +488,14 @@ const ImportExportJson: Component = () => {
             if(errMsg().length === 0) {
                 await showUsers('after final');
             }
-            await endTest(errMsg());
             // Close Connection db-from-json
             const res = (await sqlite.isConnection('db-from-json')).result;
             if(res) {
                 await sqlite.closeConnection('db-from-json'); 
             } 
+            // test issue 256
+            await testIssue265();
+            await endTest(errMsg());
         } catch (err) {
             await endTest(errMsg());
         }     
