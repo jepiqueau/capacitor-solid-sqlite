@@ -1,6 +1,6 @@
 {
   "name": "capacitor-solid-sqlite",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "",
   "scripts": {
     "start": "vite",
@@ -19,7 +19,8 @@
     "vite-plugin-windicss": "^1.8.3"
   },
   "dependencies": {
-    "@capacitor-community/sqlite": "^3.4.3-2",
+    "@capacitor-community/electron": "^4.1.0",
+    "@capacitor-community/sqlite": "^3.4.3-3",
     "@capacitor/android": "^3.4.3",
     "@capacitor/core": "^3.4.3",
     "@capacitor/ios": "^3.4.3",

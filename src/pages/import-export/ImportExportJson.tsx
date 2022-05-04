@@ -112,7 +112,7 @@ const ImportExportJson: Component = () => {
             return Promise.reject();
         }
     }
-    const showUsers = async(): Promise<void> => {
+    const showUsers = async(title: string): Promise<void> => {
         try {
             // Query the users and associated messages
             const query = `
@@ -126,7 +126,7 @@ const ImportExportJson: Component = () => {
             let res: any = await db.query(query);
 
             setUsers([...res.values]);
-            console.log(`&&&&&& users &&&&&&`);
+            console.log(`&&&&&& users ${title} &&&&&&`);
             for(const result of users()) {
                 console.log(`uid: ${result.uid} uname: ${result.uname} udeleted: ${result.udeleted} ulast: ${result.ulast}`);
                 if(result.mtitle != null) {
@@ -304,6 +304,52 @@ const ImportExportJson: Component = () => {
         } catch (err:any) {
             let msg: string = err.message ? err.message : err;
             setErrMsg((errMsg) => errMsg.concat(`Error: ${msg}`));
+            console.log(`${errMsg()}`)
+            return Promise.reject();
+        }
+    }
+    const insertOnConflict = async (): Promise<void> => {
+        try {
+            const stuffSet: Array<capSQLiteSet>  = [
+                { statement:`INSERT INTO users (name,email,age) VALUES (?,?,?)
+                 ON CONFLICT (email) 
+                 DO UPDATE SET email = "testconflict@example.com", name="TestConflict", last_modified=(strftime('%s', 'now'));`,
+                  values:["Addington","Addington@example.com",22]
+                },
+                { statement:`INSERT INTO users (name,email,age) VALUES (?,?,?)
+                 ON CONFLICT (email) 
+                 DO UPDATE SET email = "testconflict1@example.com", name="TestConflict1", last_modified=(strftime('%s', 'now'));`,
+                  values:["Jeep","Jeep@example.com",65]
+                },
+                { statement:`INSERT INTO users (name,email,age) VALUES (?,?,?)
+                 ON CONFLICT (email) 
+                 DO UPDATE SET email = "testconflict2@example.com", name="TestConflict2", last_modified=(strftime('%s', 'now'));`,
+                  values:["Test1","Test1@example.com",45]
+                },
+                { statement:`INSERT INTO users (name,email,age) VALUES (?,?,?)
+                 ON CONFLICT (email) 
+                 DO UPDATE SET email = "testconflict3@example.com", name="TestConflict3", last_modified=(strftime('%s', 'now'));`,
+                  values:["Test2","Test2@example.com",60]
+                },
+                { statement:`INSERT INTO users (name,email,age) VALUES (?,?,?)
+                 ON CONFLICT (email) 
+                 DO UPDATE SET email = "testconflict4@example.com", name="TestConflict4", last_modified=(strftime('%s', 'now'));`,
+                  values:["Test3","Test3@example.com",15]
+                },
+            ];
+            let res: any = await db.executeSet(stuffSet); 
+            if(res.changes.changes != 5 || res.changes.lastId != 13) {
+                const msg = 'changes !=5 or lastId != 13';
+                console.log(`${msg}`)
+                setErrMsg((errMsg) => errMsg.concat(`Error: ${msg}`));
+                return Promise.reject();
+            }
+            console.log(`>>> insertOnConflict executeSet res: ${JSON.stringify(res)}`);
+
+        } catch (err:any) {
+            let msg: string = err.message ? err.message : err;
+            setErrMsg((errMsg) => errMsg.concat(`Error: ${msg}`));
+            console.log(`${errMsg()}`)
             return Promise.reject();
         }
     }
@@ -320,7 +366,7 @@ const ImportExportJson: Component = () => {
             let retQuery = await db.query("SELECT * from sync_table;", [])
             console.log(`>>> retQuery before export full: ${JSON.stringify(retQuery)}`)
             // export full
-            await showUsers();
+            await showUsers('before export full');
             await exportFull();
             retQuery = await db.query("SELECT * from sync_table;", [])
             console.log(`>>> retQuery after export full: ${JSON.stringify(retQuery)}`)
@@ -330,7 +376,7 @@ const ImportExportJson: Component = () => {
             await delay(2, 'before capturing new data');
             // do some stuff
             await doSomeStuff();
-            await showUsers();
+            await showUsers('after capturing some stuff');
             // export partial
             retQuery = await db.query("SELECT * from sync_table;", [])
             console.log(`>>> retQuery before export partial: ${JSON.stringify(retQuery)}`)
@@ -341,10 +387,13 @@ const ImportExportJson: Component = () => {
             await localSynchronization();
             // test importing partial with delete
             await importPartial(partialImport2, "partialImport2");
-
+            await showUsers('after partialImport2 ');
+            await delay(2, 'before INSERT ON CONFLICT UPDATE');
+            // test INSERT ON CONFLICT UPDATE
+            await insertOnConflict();
             // Show users
             if(errMsg().length === 0) {
-                await showUsers();
+                await showUsers('after final');
             }
             await endTest(errMsg());
             // Close Connection db-from-json

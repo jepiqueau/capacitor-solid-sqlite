@@ -108,8 +108,10 @@ const NoEncryption: Component = () => {
             // create tables in db1
             const query = `
                 CREATE TABLE IF NOT EXISTS test (
-                id INTEGER PRIMARY KEY NOT NULL,
-                name TEXT NOT NULL
+                userId INTEGER PRIMARY KEY NOT NULL,
+                name TEXT NOT NULL,
+                email TEXT NOT NULL,
+                country TEXT NOT NULL
                 );
             `        
             ret = await db1.execute(query);
@@ -124,8 +126,24 @@ const NoEncryption: Component = () => {
             console.log(`&&&& getTableList res ${JSON.stringify(res)}`)
             const statement = 'SELECT * FROM test;';
             const qValues: any[] = [];
-            const result = await db1.query(statement, qValues);
-            console.log('select result', result.values);
+            let result = await db1.query(statement, qValues);
+            console.log(`&&&& select result ${JSON.stringify(result.values)};`);
+            let sQuery = "INSERT INTO test (userId, name, email, country) VALUES(1, 'Jeep', 'jeep@email.com', 'france');";
+            res = await db1.run(sQuery,[]);
+            if(res.changes.lastId !== 1) {
+                const msg = `Run insert one user lastId != 1`;
+                setErrMsg((errMsg) => errMsg.concat(msg));
+                return;
+            }
+            console.log(`&&&& INSERT res.changes.changes: ${res.changes.changes}`)
+            result = await db1.query(statement, qValues);
+            console.log(`&&&& after INSERT select result ${JSON.stringify(result.values)};`);
+
+            sQuery = "REPLACE INTO test (userId, name, email, country) VALUES(1, 'Maria', 'maria@email.com', 'france');";
+            res = await db1.run(sQuery,[]);
+            console.log(`&&&& REPLACE res.changes: ${JSON.stringify(res.changes)}`)
+            result = await db1.query(statement, qValues);
+            console.log(`&&&& after REPLACE select result ${JSON.stringify(result.values)};`);
         
             await sqlite.closeConnection("db_tab3"); 
 
@@ -250,6 +268,7 @@ const NoEncryption: Component = () => {
                 setErrMsg((errMsg) => errMsg.concat(`Error: ${msg}`));
                 return;
             }
+            setLog((log) => log.concat("> export full successful\n"));
         } catch (err:any) {
             let msg: string = err.message ? err.message : err;
             setErrMsg((errMsg) => errMsg.concat(`Error: ${msg}`));
@@ -261,14 +280,16 @@ const NoEncryption: Component = () => {
         try {
           // set the synchronization date
           await db.setSyncDate((new Date()).toISOString());
+          setLog((log) => log.concat("> localSynchronization setSyncDate successful\n"));
           // remove all rows having sql_deleted = 1
           await db.deleteExportedRows();
+          setLog((log) => log.concat("> localSynchronization deleteExportedRows successful\n"));
           return;
 
         } catch (err:any) {
             let msg: string = err.message ? err.message : err;
             setErrMsg((errMsg) => errMsg.concat(`Error: ${msg}`));
-            return Promise.reject();
+            console.log(`>>> errMsg: ${errMsg()}`)
         }
     }
 
