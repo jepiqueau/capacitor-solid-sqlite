@@ -22,6 +22,10 @@ export const routes: RouteDefinition[] = [
     component: lazy(() => import('./pages/import-export/ImportExportJson'))
   },
   {
+    path: '/issue271',
+    component: lazy(() => import('./pages/issue271/Issue271'))
+  },
+  {
     path: '/about',
     component: lazy(() => import('./pages/about/About')),
     data: AboutData,

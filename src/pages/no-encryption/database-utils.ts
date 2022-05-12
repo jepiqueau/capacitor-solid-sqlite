@@ -86,3 +86,10 @@ export const fourUsers: Array<capSQLiteSet>  = [
   },
 ];
 
+export const createContactSchema: string = `
+CREATE TABLE IF NOT EXISTS contacts (
+    id INTEGER PRIMARY KEY NOT NULL,
+    email TEXT UNIQUE NOT NULL,
+    name TEXT
+};
+`;
