@@ -4,7 +4,7 @@ import { platform, sqlite } from '../../App';
 import { SQLiteDBConnection, capSQLiteSet } from '@capacitor-community/sqlite';
 
 import { openConnection } from '../../utils/connection-utils';
-import { createContactSchema, fiveContacts } from './database-utils';
+import { createContactSchema, eightContacts } from './database-utils';
 import { delay } from '../../utils/delay-utils';
 import styles from './Issue271.module.css';
 
@@ -50,13 +50,13 @@ const Issue271: Component = () => {
             let stmt = "DELETE FROM contacts;"
             res = await db.execute(stmt);
             // Insert four contacts with executeSet method
-            res = await db.executeSet(fiveContacts);
-            if (res.changes.changes !== 5) {
-                const msg = `ExecuteSet fiveContacts changes != 5`;
+            res = await db.executeSet(eightContacts);
+            if (res.changes.changes !== 8) {
+                const msg = `ExecuteSet fiveContacts changes != 8`;
                 setErrMsg((errMsg) => errMsg.concat(msg));
                 return;
             }
-            setLog((log) => log.concat("> ExecuteSet five contacts successful\n"));
+            setLog((log) => log.concat("> ExecuteSet eight contacts successful\n"));
 
             if(platform === 'web') {
                 // save the db to store
@@ -64,13 +64,16 @@ const Issue271: Component = () => {
             }
             // Query the contacts
             res = await db.query("SELECT * FROM contacts");
-            if(res.values.length !== 5 ||
+            if(res.values.length !== 8 ||
             res.values[0].name !== "Jackson" ||
                         res.values[1].name !== "Bush" ||
                         res.values[2].name !== "Jones" ||
                         res.values[3].name !== "Kennedy" ||
-                        res.values[4].name !== "Jeep") {
-                const msg = `Query not returning four contacts`;
+                        res.values[4].name !== "Jeep" ||
+                        res.values[5].name !== "Whiteley" ||
+                        res.values[6].name !== "Burton" ||
+                        res.values[7].name !== "Lewis") {
+                const msg = `Query not returning eight contacts`;
                 setErrMsg((errMsg) => errMsg.concat(msg));
                 return;
             }
@@ -106,7 +109,6 @@ const Issue271: Component = () => {
             DELETE FROM contacts WHERE id = 2;
             `;
             var res: any = await db.execute(stmt);
-            console.log(`delete execute res: ${JSON.stringify(res)}`) 
             if(res.changes.changes != 1) {
                 const msg = `execute delete "testContacts" changes != 1 `;
                 setErrMsg((errMsg) => errMsg.concat(`Error: ${msg}`));
@@ -144,6 +146,31 @@ const Issue271: Component = () => {
             
             setLog((log) => log.concat("> delete with executeSet successful\n"));
 
+            // Delete contacts in an execute statement issue #273
+            const userId = 6
+            stmt = `
+            DELETE FROM contacts WHERE id = ${userId};
+            `;
+            var res: any = await db.execute(stmt);
+            if(res.changes.changes != 1) {
+                const msg = `execute delete userId "testContacts" changes != 1 `;
+                setErrMsg((errMsg) => errMsg.concat(`Error: ${msg}`));
+                return;
+            }
+            setLog((log) => log.concat("> delete with execute userId successful\n"));
+
+            await showContacts('after DELETE issue#273');
+
+            stmt = `
+            DELETE FROM contacts;`;
+            var res: any = await db.execute(stmt);
+            console.log(`delete execute res: ${JSON.stringify(res)}`) 
+            if(res.changes.changes != 3) {
+                const msg = `execute delete all "testContacts" changes != 3 `;
+                setErrMsg((errMsg) => errMsg.concat(`Error: ${msg}`));
+                return;
+            }
+            setLog((log) => log.concat("> delete from contactc successful\n"));
             if(platform === 'web') {
                 // save the db to store
                 await sqlite.saveToStore('testContacts');

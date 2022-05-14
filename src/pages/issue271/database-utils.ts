@@ -8,8 +8,8 @@ CREATE TABLE IF NOT EXISTS contacts (
     name TEXT
 );
 `;
-// Insert a set of contactss
-export const fiveContacts: Array<capSQLiteSet>  = [
+// Insert a set of contacts
+export const eightContacts: Array<capSQLiteSet>  = [
   { statement:"INSERT INTO contacts (name,email) VALUES (?,?);",
     values:[
         ["Jackson","Jackson@example.com"],
@@ -21,6 +21,11 @@ export const fiveContacts: Array<capSQLiteSet>  = [
     values:["Kennedy","Kennedy@example.com"]
   },
   { statement:"INSERT INTO contacts (name,email) VALUES (?,?);",
-    values:["Jeep","Jeep@example.com"]
+    values:[
+      ["Jeep","Jeep@example.com"],
+      ["Whiteley","Whiteley@example.com"],
+      ["Burton","Burton@example.com"],
+      ["Lewis","Lewis@example.com"]
+    ]
   },
 ];
