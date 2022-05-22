@@ -1,0 +1,25 @@
+.Issue271 {
+    text-align: center;
+    background-color: #3c3d3d;
+    display: flex;
+    flex-direction: column;
+}
+.header {
+    background-color: #282c34;
+    height: 5vh;
+    text-align: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
+}
+.content {
+    min-height: calc(90vh - 60px) ;
+    text-align: left;
+    padding: 1vw;
+    background-color: #3c3d3d;
+    color: white;
+
+}
+.content ul {
+    padding: 2vmin;
+}
