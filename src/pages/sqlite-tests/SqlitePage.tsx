@@ -37,6 +37,11 @@ const SqlitePage: Component = () => {
                                 Issue275
                             </Link>
                         </li>
+                        <li class="text-center bg-blue-500 text-gray-100 py-2 px-4 my-2">
+                            <Link href="/issue277" class="no-underline hover:underline">
+                                Issue277
+                            </Link>
+                        </li>
                     </ul>
                 </nav>
             </div>

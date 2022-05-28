@@ -49,6 +49,7 @@ const Issue275: Component = () => {
             // Delete contacts if any
             let stmt = "DELETE FROM keysvalues;"
             res = await db.execute(stmt);
+            console.log(`Delete from ${JSON.stringify(res)}`);
             // Insert five keysvalues with executeSet method
             res = await db.executeSet(fiveKeysValues);
             if (res.changes.changes !== 5) {
@@ -57,7 +58,13 @@ const Issue275: Component = () => {
                 return;
             }
             setLog((log) => log.concat("> ExecuteSet five KeysValues successful\n"));
-
+            let cmd = 'INSERT INTO keysvalues (id,key,value) VALUES ("5b085e5d-3d7d-431a-a1b0-379dbe08k25d","key6","32");';
+            res = await db.execute(stmt);
+            console.log(`Execute Insert ${JSON.stringify(res)}`);
+            cmd = 'INSERT INTO keysvalues1 (id,key,value) VALUES (?,?,?);';
+            let val = ["5c095e5d-3d7d-431a-a1b0-379dbe08k25d","key7","38"]
+            res = await db.run(cmd,val);
+            console.log(`Run Insert ${JSON.stringify(res)}`);
             if(platform === 'web') {
                 // save the db to store
                 await sqlite.saveToStore('testKeysValues');
@@ -75,6 +82,7 @@ const Issue275: Component = () => {
                 return;
             }
             setLog((log) => log.concat("> Select five KeysValues successful\n"));
+
         } catch (err:any) {
             let msg: string = err.message ? err.message : err;
             setErrMsg((errMsg) => errMsg.concat(`Error: ${msg}`));
@@ -186,7 +194,7 @@ const Issue275: Component = () => {
 
     return (
         <Suspense>
-            <div class={styles.Issue271}>
+            <div class={styles.Issue275}>
                 <header class={styles.header}>
                     <h2>Test Issue275</h2>
                 </header>
