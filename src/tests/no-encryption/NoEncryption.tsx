@@ -208,6 +208,7 @@ const NoEncryption: Component = () => {
             DELETE FROM users WHERE id = 4;
             DELETE FROM users WHERE id = 5;
             `;
+            console.log(`in deleteTest stmt: ${stmt}`);
             var res: any = await db.execute(stmt);
             console.log(`delete execute res: ${JSON.stringify(res)}`) 
             if(res.changes.changes != 2) {

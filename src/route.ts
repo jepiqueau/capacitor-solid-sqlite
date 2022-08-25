@@ -15,23 +15,27 @@ export const routes: RouteDefinition[] = [
   },
   {
     path: '/noencryption',
-    component: lazy(() => import('./pages/no-encryption/NoEncryption'))
+    component: lazy(() => import('./tests/no-encryption/NoEncryption'))
   },
   {
     path: '/importexport',
-    component: lazy(() => import('./pages/import-export/ImportExportJson'))
+    component: lazy(() => import('./tests/import-export/ImportExportJson'))
   },
   {
     path: '/issue271',
-    component: lazy(() => import('./pages/issue271/Issue271'))
+    component: lazy(() => import('./tests/issue271/Issue271'))
   },
   {
     path: '/issue275',
-    component: lazy(() => import('./pages/issue275/Issue275'))
+    component: lazy(() => import('./tests/issue275/Issue275'))
   },
   {
     path: '/issue277',
-    component: lazy(() => import('./pages/issue277/Issue277'))
+    component: lazy(() => import('./tests/issue277/Issue277'))
+  },
+  {
+    path: '/issue285',
+    component: lazy(() => import('./tests/issue285/Issue285'))
   },
   {
     path: '/about',

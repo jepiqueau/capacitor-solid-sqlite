@@ -52,6 +52,7 @@ const Issue275: Component = () => {
             console.log(`Delete from ${JSON.stringify(res)}`);
             // Insert five keysvalues with executeSet method
             res = await db.executeSet(fiveKeysValues);
+            console.log(`ExecuteSet ${JSON.stringify(res)}`);
             if (res.changes.changes !== 5) {
                 const msg = `ExecuteSet five KeysValues changes != 5`;
                 setErrMsg((errMsg) => errMsg.concat(msg));
@@ -59,9 +60,9 @@ const Issue275: Component = () => {
             }
             setLog((log) => log.concat("> ExecuteSet five KeysValues successful\n"));
             let cmd = 'INSERT INTO keysvalues (id,key,value) VALUES ("5b085e5d-3d7d-431a-a1b0-379dbe08k25d","key6","32");';
-            res = await db.execute(stmt);
+            res = await db.execute(cmd);
             console.log(`Execute Insert ${JSON.stringify(res)}`);
-            cmd = 'INSERT INTO keysvalues1 (id,key,value) VALUES (?,?,?);';
+            cmd = 'INSERT INTO keysvalues (id,key,value) VALUES (?,?,?);';
             let val = ["5c095e5d-3d7d-431a-a1b0-379dbe08k25d","key7","38"]
             res = await db.run(cmd,val);
             console.log(`Run Insert ${JSON.stringify(res)}`);
@@ -71,17 +72,19 @@ const Issue275: Component = () => {
             }
             // Query the KeysValues
             res = await db.query("SELECT * FROM keysvalues");
-            if(res.values.length !== 5 ||
+            if(res.values.length !== 7 ||
             res.values[0].key !== "key1" ||
                         res.values[1].key !== "key2" ||
                         res.values[2].key !== "key3" ||
                         res.values[3].key !== "key4" ||
-                        res.values[4].key !== "key5" ) {
-                const msg = `Query not returning five KeysValues`;
+                        res.values[4].key !== "key5" ||
+                        res.values[5].key !== "key6" ||
+                        res.values[6].key !== "key7" ) {
+                const msg = `Query not returning seven KeysValues`;
                 setErrMsg((errMsg) => errMsg.concat(msg));
                 return;
             }
-            setLog((log) => log.concat("> Select five KeysValues successful\n"));
+            setLog((log) => log.concat("> Select seven KeysValues successful\n"));
 
         } catch (err:any) {
             let msg: string = err.message ? err.message : err;
@@ -157,8 +160,8 @@ const Issue275: Component = () => {
             DELETE FROM keysvalues;`;
             var res: any = await db.execute(stmt);
             console.log(`delete execute res: ${JSON.stringify(res)}`) 
-            if(res.changes.changes != 1) {
-                const msg = `execute delete all "testKeysValues" changes != 1 `;
+            if(res.changes.changes != 3) {
+                const msg = `execute delete all "testKeysValues" changes != 3 `;
                 setErrMsg((errMsg) => errMsg.concat(`Error: ${msg}`));
                 return;
             }
