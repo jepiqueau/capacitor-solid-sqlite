@@ -38,6 +38,11 @@ export const routes: RouteDefinition[] = [
     component: lazy(() => import('./tests/issue285/Issue285'))
   },
   {
+    path: '/cpkexportimport',
+    component: lazy(() => import('./tests/cpk-export-import/CPKExportImport'))
+  },
+  
+  {
     path: '/about',
     component: lazy(() => import('./pages/about/About')),
     data: AboutData,

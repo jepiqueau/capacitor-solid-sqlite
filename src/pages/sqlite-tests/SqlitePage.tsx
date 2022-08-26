@@ -47,6 +47,11 @@ const SqlitePage: Component = () => {
                                 Issue285
                             </Link>
                         </li>
+                        <li class="text-center bg-blue-500 text-gray-100 py-2 px-4 my-2">
+                            <Link href="/cpkexportimport" class="no-underline hover:underline">
+                                CPK ExportImport
+                            </Link>
+                        </li>
                     </ul>
                 </nav>
             </div>
