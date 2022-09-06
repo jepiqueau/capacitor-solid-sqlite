@@ -5,7 +5,7 @@
 <p align="center">SolidJS application demonstrating the use of the</p>
 <p align="center"><strong><code>@capacitor-community/sqlite</code></strong></p>
 <br>
-<p align="center"><strong><code>this app uses Capacitor3</code></strong></p>
+<p align="center"><strong><code>this app uses Capacitor 4</code></strong></p>
 <br>
 <p align="center">
   <img src="https://img.shields.io/maintenance/yes/2022?style=flat-square" />
@@ -42,8 +42,10 @@ npm install
 ```bash
 npm run build
 npx cap sync
+npx cap sync @capacitor-community/electron
 npm run build
 npx cap copy
+npx cap copy @capacitor-community/electron
 ```
 
 the capacitor config parameters are:
@@ -78,6 +80,12 @@ Once Android Studio launches, you can build your app through the standard Androi
 npx cap open ios
 ```
 
+### electron
+
+```bash
+npx cap open @capacitor-community/electron
+
+```
 
 ### Test SQLite access
 
