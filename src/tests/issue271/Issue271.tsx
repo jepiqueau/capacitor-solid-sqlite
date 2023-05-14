@@ -1,5 +1,6 @@
 import type { Component } from 'solid-js';
 import { For, Suspense, createSignal, onMount } from "solid-js";
+import { useToString } from 'solidjs-use'
 import { platform, sqlite } from '../../App';
 import { SQLiteDBConnection, capSQLiteSet } from '@capacitor-community/sqlite';
 
@@ -195,7 +196,7 @@ const Issue271: Component = () => {
 
         await endTest(errMsg());
         // Close Connection testNew        
-        await sqlite.closeConnection("testContacts"); 
+        await sqlite.closeConnection("testContacts", false); 
 
     });
 
@@ -207,7 +208,7 @@ const Issue271: Component = () => {
                 </header>
                 <div class= {styles.content}>
                     <pre>
-                        <p>{log}</p>
+                        <p>{useToString(log)()}</p>
                     </pre>
                     <ul>
                         <For each={contacts()}>

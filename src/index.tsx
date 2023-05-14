@@ -1,7 +1,7 @@
-import 'windi.css';
+//import 'windi.css';
 /* @refresh reload */
 import { render } from 'solid-js/web';
-import { Router } from 'solid-app-router';
+import { Router } from '@solidjs/router';
 import { JeepSqlite } from 'jeep-sqlite/dist/components/jeep-sqlite';
 
 

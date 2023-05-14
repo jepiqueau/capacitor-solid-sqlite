@@ -1,5 +1,6 @@
 import type { Component } from 'solid-js';
 import { For, Suspense, createSignal, onMount } from "solid-js";
+import { useToString } from 'solidjs-use'
 import { platform, sqlite } from '../../App';
 import { SQLiteDBConnection } from '@capacitor-community/sqlite';
 import { createSchema, someData } from './database-utils';
@@ -7,6 +8,7 @@ import { createSchema, someData } from './database-utils';
 import { openConnection, deleteDatabase} from '../../utils/connection-utils';
 import styles from './CPKExportImport.module.css';
 import { delay } from '../../utils/delay-utils';
+import { fiveKeysValues } from '../issue277/database-utils';
 
 const CPKExportImport: Component = () => {
     const [log, setLog] =  createSignal<string[]>([]);
@@ -210,9 +212,9 @@ const CPKExportImport: Component = () => {
             // delete the database
             await deleteDatabase(db);
             // Close Connection db-from-json
-            const res = (await sqlite.isConnection('db-cpk')).result;
+            const res = (await sqlite.isConnection('db-cpk',false)).result;
             if(res) {
-                await sqlite.closeConnection('db-cpk'); 
+                await sqlite.closeConnection('db-cpk',false); 
             } 
             // Full Import
             await importFull(exJsonObj);
@@ -232,7 +234,7 @@ const CPKExportImport: Component = () => {
                 </header>
                 <div class= {styles.content}>
                     <pre>
-                        <p>{log}</p>
+                        <p>{useToString(log)()}</p>
                     </pre>
                     <ul>
                         <For each={albums()}>

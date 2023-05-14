@@ -1,5 +1,6 @@
 import type { Component } from 'solid-js';
 import { For, Suspense, createSignal, onMount } from "solid-js";
+import { useToString } from 'solidjs-use'
 import { platform, sqlite } from '../../App';
 import { SQLiteDBConnection, capSQLiteSet } from '@capacitor-community/sqlite';
 
@@ -145,7 +146,7 @@ const NoEncryption: Component = () => {
             result = await db1.query(statement, qValues);
             console.log(`&&&& after REPLACE select result ${JSON.stringify(result.values)};`);
         
-            await sqlite.closeConnection("db_tab3"); 
+            await sqlite.closeConnection("db_tab3",false); 
 
         } catch (err:any) {
             let msg: string = err.message ? err.message : err;
@@ -316,7 +317,7 @@ const NoEncryption: Component = () => {
 
         await endTest(errMsg());
         // Close Connection testNew        
-        await sqlite.closeConnection("testNew"); 
+        await sqlite.closeConnection("testNew", false); 
 
     });
 
@@ -328,7 +329,7 @@ const NoEncryption: Component = () => {
                 </header>
                 <div class= {styles.content}>
                     <pre>
-                        <p>{log}</p>
+                        <p>{useToString(log)()}</p>
                     </pre>
                     <ul>
                         <For each={users()}>

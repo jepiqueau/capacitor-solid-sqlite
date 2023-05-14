@@ -1,5 +1,6 @@
 import type { Component } from 'solid-js';
 import { For, Suspense, createSignal, onMount } from "solid-js";
+import { useToString } from 'solidjs-use'
 import { platform, sqlite } from '../../App';
 import { SQLiteDBConnection, capSQLiteSet } from '@capacitor-community/sqlite';
 
@@ -14,7 +15,6 @@ const ImportExportJson: Component = () => {
     const [errMsg, setErrMsg] = createSignal<string>("");
     const [users, setUsers] = createSignal<any[]>([]);
     let db: SQLiteDBConnection;
-
     const startTest = async (): Promise<void> => {
         setLog((log) => log.concat('* Starting testImportExportJson *\n\n'));
         return;
@@ -47,7 +47,7 @@ const ImportExportJson: Component = () => {
                 db = await openConnection('db-from-json', false,
                                           'no-encryption', 1, true);
                 // Close Connection testNew        
-                await sqlite.closeConnection('db-from-json'); 
+                await sqlite.closeConnection('db-from-json',false); 
             }
             // end of for development <<-
 
@@ -175,7 +175,7 @@ const ImportExportJson: Component = () => {
     const importPartial = async(partialImport: any, importName: string): Promise<void> => {
         try {
             // Close Connection testNew        
-            await sqlite.closeConnection('db-from-json'); 
+            await sqlite.closeConnection('db-from-json', false); 
             // test Json object validity
             let res: any = await sqlite.isJsonValid(JSON.stringify(partialImport));
             if(!res.result) { 
@@ -436,9 +436,9 @@ const ImportExportJson: Component = () => {
             console.log(`>>> retQuery last_insert_rowid(): ${JSON.stringify(retQuery)}`)
 
             // Close Connection db-from-json
-            res = (await sqlite.isConnection('db-issue265')).result;
+            res = (await sqlite.isConnection('db-issue265',false)).result;
             if(res) {
-                await sqlite.closeConnection('db-issue265'); 
+                await sqlite.closeConnection('db-issue265',false); 
             } 
         } catch (err:any) {
             let msg: string = err.message ? err.message : err;
@@ -489,9 +489,9 @@ const ImportExportJson: Component = () => {
                 await showUsers('after final');
             }
             // Close Connection db-from-json
-            const res = (await sqlite.isConnection('db-from-json')).result;
+            const res = (await sqlite.isConnection('db-from-json',false)).result;
             if(res) {
-                await sqlite.closeConnection('db-from-json'); 
+                await sqlite.closeConnection('db-from-json',false); 
             } 
             // test issue 256
             await testIssue265();
@@ -509,7 +509,7 @@ const ImportExportJson: Component = () => {
                 </header>
                 <div class= {styles.content}>
                     <pre>
-                        <p>{log}</p>
+                        <p>{useToString(log)()}</p>
                     </pre>
                     <ul>
                         <For each={users()}>
