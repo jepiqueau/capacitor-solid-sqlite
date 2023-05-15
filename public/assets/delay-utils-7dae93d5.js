@@ -1,0 +1,1 @@
+const t=async(l,e)=>new Promise(n=>{setTimeout(()=>{const o="*".repeat(e.length);console.log(`*****************${o}`),console.log(`Simulate a delay ${e}`),console.log(`*****************${o}`),n()},l*1e3)});export{t as d};

@@ -6,7 +6,7 @@
 }
 .header {
     background-color: #282c34;
-    height: 5vh;
+    height: fit-content;
     text-align: center;
     justify-content: center;
     font-size: calc(10px + 2vmin);
